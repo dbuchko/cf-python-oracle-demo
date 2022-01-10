@@ -1,2 +1,3 @@
+Flask
+gunicorn
 cx_Oracle
-

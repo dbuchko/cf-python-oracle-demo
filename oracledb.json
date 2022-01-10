@@ -1,0 +1,5 @@
+{
+   "username": "read-only",
+   "password": "xxxxx",
+   "dsn": "localhost/xepdb1"
+}

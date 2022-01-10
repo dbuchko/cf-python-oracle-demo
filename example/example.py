@@ -1,9 +1,28 @@
+#from flask import Flask
+import os
+import json
 import cx_Oracle
 
+#app = Flask(__name__)
+
+# Get port from environment variable or choose 9099 as local default
+#port = int(os.getenv("PORT", 9099))
+
+# Get Redis credentials
+if 'VCAP_SERVICES' in os.environ:
+    services = json.loads(os.getenv('VCAP_SERVICES'))
+    db_env = services['oracledb'][0]['credentials']
+else:
+    db_env = dict(dsn='localhost', username='system', password='')
+db_env['host'] = db_env['dsn']
+del db_env['dsn']
+db_env['username'] = int(db_env['username'])
+
+# Connect to database
 connection = cx_Oracle.connect(
-    user="system",
-    password="xxxxx",
-    dsn="hostname/xepdb1")
+    user=db_env['username'],
+    password=db_env['password'],
+    dsn=db_env['dsn'])
 
 print("Successfully connected to Oracle Database")
 
