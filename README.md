@@ -14,3 +14,7 @@ Simple Python demo app that connects to an Oracle DB.  The app is based on the e
 
 3. Create a user-provided service that connects to your external Oracle instance:
 `cf cups oracledb -p oracledb.json`
+
+4. Push the app to Cloud Foundry from the root project directory, using `cf push`.
+
+5. The app has 2 endpoints:  the root `/` endpoint will query the table of all keys and values; and the `/<key>/value` endpoint will add a key/value pair to the table.

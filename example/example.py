@@ -5,7 +5,8 @@ import cx_Oracle
 
 app = Flask(__name__)
 
-# Get port from environment variable or choose 9099 as local default
+# Get host & port from environment variable or choose 9099 as local default
+hostIp = os.getenv('CF_INSTANCE_INTERNAL_IP', '0.0.0.0')
 port = int(os.getenv("PORT", 9099))
 
 # Get DB credentials
@@ -62,11 +63,11 @@ def add_value(key, s):
         cursor.executemany("insert into keyvalue (mykey, myvalue) values(:1, :2)", rows)
         print(cursor.rowcount, "Rows Inserted")
         connection.commit()
-        return 'Added {} to {}.'.format(s, key)
+        return 'Added {}, {}.'.format(key, s)
 
     else:
         abort(503)
 
 if __name__ == '__main__':
-    # Run the app, listening on all IPs with our chosen port number
-    app.run(host='0.0.0.0', port=port)
+    # Run the app, listening on the instance IP with our chosen port number
+    app.run(host=hostIp, port=port)
