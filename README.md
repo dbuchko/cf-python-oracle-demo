@@ -3,6 +3,14 @@ Simple Python demo app that connects to an Oracle DB.  The app is based on the e
 
 ## Instructions
 1. After you have cloned the repository to your local machine, you download the Oracle client from https://download.oracle.com/otn_software/linux/instantclient/214000/instantclient-basic-linux.x64-21.4.0.0.0dbru.zip and extract it into the `example` subdirectory.  You should now have an `example/instantclient_21_4` subdirectory created.
-2. Update the `user`, `password`, and `dsn` in the `oracledb.json` file to point to your Oracle instance.
+2. Create an `oracledb.json` file with the `user`, `password`, and `dsn` in the following format to point to your Oracle instance:
+```
+{
+  "username": "read-only",
+  "password": "xxxxx",
+  "dsn": "localhost/xepdb1"
+}
+```
+
 3. Create a user-provided service that connects to your external Oracle instance:
 `cf cups oracledb -p oracledb.json`
