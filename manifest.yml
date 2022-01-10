@@ -5,7 +5,6 @@ applications:
     - python_buildpack
   path: example
   command: python example.py
-  health-check-type: process
   env:
     LD_LIBRARY_PATH: /home/vcap/app/instantclient_21_4
   services:

@@ -1,12 +1,12 @@
-#from flask import Flask
+from flask import Flask
 import os
 import json
 import cx_Oracle
 
-#app = Flask(__name__)
+app = Flask(__name__)
 
 # Get port from environment variable or choose 9099 as local default
-#port = int(os.getenv("PORT", 9099))
+port = int(os.getenv("PORT", 9099))
 
 # Get DB credentials
 if 'VCAP_SERVICES' in os.environ:
@@ -28,37 +28,43 @@ print("Successfully connected to Oracle Database")
 cursor = connection.cursor()
 
 # Create a table
-
 cursor.execute("""
     begin
-        execute immediate 'drop table todoitem';
+        execute immediate 'drop table keyvalue';
         exception when others then if sqlcode <> -942 then raise; end if;
     end;""")
 
 cursor.execute("""
-    create table todoitem (
+    create table keyvalue (
         id number generated always as identity,
-        description varchar2(4000),
+        key varchar2(4000),
         creation_ts timestamp with time zone default current_timestamp,
-        done number(1,0),
+        value varchar2(4000),
         primary key (id))""")
 
-# Insert some data
-
-rows = [ ("Task 1", 0 ),
-         ("Task 2", 0 ),
-         ("Task 3", 1 ),
-         ("Task 4", 0 ),
-         ("Task 5", 1 ) ]
-
-cursor.executemany("insert into todoitem (description, done) values(:1, :2)", rows)
-print(cursor.rowcount, "Rows Inserted")
-
-connection.commit()
-
-# Now query the rows back
-for row in cursor.execute('select description, done from todoitem'):
-    if (row[1]):
-        print(row[0], "is done")
+@app.route('/')
+def keys():
+    if connection:
+        # Query the rows back
+        for row in cursor.execute('select key, value from todoitem'):
+            rows+='key=' + row[0] + ', value=' + row[1] + '\n'
+        return rows
     else:
-        print(row[0], "is NOT done")
+        return 'No DB connection available!'
+
+@app.route('/<key>/<s>')
+def add_value(key, s):
+    if connection:
+        # Insert some data
+        rows = [ (key, value )]
+        cursor.executemany("insert into todoitem (description, done) values(:1, :2)", rows)
+        print(cursor.rowcount, "Rows Inserted")
+        connection.commit()
+        return 'Added {} to {}.'.format(s, key)
+
+    else:
+        abort(503)
+
+if __name__ == '__main__':
+    # Run the app, listening on all IPs with our chosen port number
+    app.run(host='0.0.0.0', port=port)
