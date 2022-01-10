@@ -6,7 +6,7 @@ Simple Python demo app that connects to an Oracle DB.  The app is based on the e
 2. Create an `oracledb.json` file with the `user`, `password`, and `dsn` in the following format to point to your Oracle instance:
 ```
 {
-  "username": "read-only",
+  "username": "system",
   "password": "xxxxx",
   "dsn": "localhost/xepdb1"
 }
