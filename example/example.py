@@ -47,7 +47,8 @@ def keys():
     if connection:
         # Query the rows back
         for row in cursor.execute('select key, value from todoitem'):
-            rows+='key=' + row[0] + ', value=' + row[1] + '\n'
+            cur_row = 'key=' + row[0] + ', value=' + row[1] + '\n'
+            rows+=cur_row
         return rows
     else:
         return 'No DB connection available!'
