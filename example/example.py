@@ -8,12 +8,15 @@ import cx_Oracle
 # Get port from environment variable or choose 9099 as local default
 #port = int(os.getenv("PORT", 9099))
 
-# Get Redis credentials
+# Get DB credentials
 if 'VCAP_SERVICES' in os.environ:
     services = json.loads(os.getenv('VCAP_SERVICES'))
-    db_env = services['oracledb'][0]['credentials']
+
+    # Assume OracleDB is first user-provided service.  Ideally should search for it by name.
+    db_env = services['user-provided'][0]['credentials']
 else:
     db_env = dict(dsn='localhost', username='system', password='')
+
 db_env['host'] = db_env['dsn']
 del db_env['dsn']
 db_env['username'] = int(db_env['username'])
