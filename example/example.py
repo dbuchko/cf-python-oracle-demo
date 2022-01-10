@@ -37,17 +37,18 @@ cursor.execute("""
 cursor.execute("""
     create table keyvalue (
         id number generated always as identity,
-        key varchar2(4000),
+        mykey varchar2(4000),
         creation_ts timestamp with time zone default current_timestamp,
-        value varchar2(4000),
+        myvalue varchar2(4000),
         primary key (id))""")
 
 @app.route('/')
 def keys():
     if connection:
         # Query the rows back
-        for row in cursor.execute('select key, value from todoitem'):
-            cur_row = 'key=' + row[0] + ', value=' + row[1] + '\n'
+        rows=''
+        for row in cursor.execute('select mykey, myvalue from keyvalue'):
+            cur_row = 'mykey=' + row[0] + ', myvalue=' + row[1] + '\n'
             rows+=cur_row
         return rows
     else:
@@ -57,8 +58,8 @@ def keys():
 def add_value(key, s):
     if connection:
         # Insert some data
-        rows = [ (key, value )]
-        cursor.executemany("insert into todoitem (description, done) values(:1, :2)", rows)
+        rows = [ (key, s)]
+        cursor.executemany("insert into keyvalue (mykey, myvalue) values(:1, :2)", rows)
         print(cursor.rowcount, "Rows Inserted")
         connection.commit()
         return 'Added {} to {}.'.format(s, key)
