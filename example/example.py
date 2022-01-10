@@ -15,11 +15,7 @@ if 'VCAP_SERVICES' in os.environ:
     # Assume OracleDB is first user-provided service.  Ideally should search for it by name.
     db_env = services['user-provided'][0]['credentials']
 else:
-    db_env = dict(dsn='localhost', username='system', password='')
-
-db_env['host'] = db_env['dsn']
-del db_env['dsn']
-db_env['username'] = int(db_env['username'])
+    db_env = dict(dsn='localhost/xepdb1', username='system', password='')
 
 # Connect to database
 connection = cx_Oracle.connect(
