@@ -1,0 +1,11 @@
+---
+applications:
+- name: example
+  buildpacks:
+    - python_buildpack
+  path: python-demo
+  command: python example.py
+  health-check-type: process
+  env:
+    LD_LIBRARY_PATH: /home/vcap/app/instantclient_21_4
+
